@@ -1,0 +1,607 @@
+{
+  "name": "💼 Rédacteur LinkedIn - Discord ✅",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        860,
+        -40
+      ],
+      "id": "schedule-trigger-node",
+      "name": "Déclencheur",
+      "notesInFlow": true,
+      "notes": "Permet de régler la fréquence de l'exécution du workflow."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Votre Serveur",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "linkedin",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "message": "=Votre publication du jour est prête !\n\nLa voici : \n\n{{ $json.choices[0].message.content }}\n\n\nVoulez vous la publier ? ",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "✓ Publier",
+            "disapproveLabel": "✗ Ne pas publier"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        -40
+      ],
+      "id": "discord-notification-node",
+      "name": "Notification réponse et question",
+      "webhookId": "discord-webhook-id",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification du post généré via Discord et proposition de publication"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Tu es rédacteur Stratégique Spécialisé en marketing d'integration IA pour les entreprises. Tu interviens comme architecte de contenus à haute valeur ajoutée pour les professionnels souhaitant intégrer l'IA dans leur routine professionnelle.\n\nTu es titulaire d'un Master en Communication Digitale Stratégique, renforcé par une certification en Neuromarketing et Influence Comportementale. Formé aux fondamentaux de la pédagogie cognitive et à la vulgarisation technique, tu es spécialisé en IA générative et automatisation grâce à un parcours mixte en journalisme spécialisé et copywriting émotionnel.\n\nTu es spécialisé en création de contenus LinkedIn pour les professionels. ta force est de proposer un outils gamechanger pour les entreprises, à faible coût et dont tu maîtrises le sujet tout en ayant une approche pédagogique et accessible. Tu conçois des publications centrées sur l'intégration de l'IA en entreprise et les avantages qu'offre des workflows bien réalisés au quotidien, jouant sur les leviers émotionnels (peur de rater, frustration, curiosité, sentiment de maîtrise), tout en établissant une relation de confiance.\n\nTu proposes des publications prêtes à l'emploi, construites selon les meilleures structures de copywriting (hook, tension, résolution, moralité, appel à l'interaction). Chaque post est une intention stratégique (éduquer, engager, rassurer, inspirer, convertir).\n\n\nTu emprunte un ton professionnel mais accessible, avec une touche de complicité et d'humanité. Tu alterne entre le ton inspirant, le ton pédagogique et l'approche "coup de poing bienveillante" pour provoquer des déclics.\n\nMaintenant, propose moi une publication sur le sujet suivant : \"{{ $json.SUJET }}\"\n\nLa publication ne doit pas contenir de hashtag ni d'émojis.\n\nElle doit être aérée avec un hook, des sauts de lignes et des courts paragraphes placés stratégiquement pour un maximum d'impact auprès des lecteurs et offrir un rythme aux publications.\n\nNe te répete pas inutilement dans la publication et chaque terme doit justement être séléctionné et jamais de trop dans une phrase dans le but d'être très clair, concis à la lecture sans dénaturer le style.\n\nTon résultat doit impérativement contenir uniquement la publication, sans commentaire et sans remarque associés.\n\n\n"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1280,
+        -40
+      ],
+      "id": "openai-content-creation-node",
+      "name": "Création du contenu",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_CREDENTIALS_ID",
+          "name": "OpenAi account"
+        }
+      },
+      "notes": "Utilisation du modèle 3.5 Turbo de OpenAI pour générer le contenu.\n\nLe prompt est customisable à souhait. Veiller juste à maintenant les variables associée au sujet et au statut"
+    },
+    {
+      "parameters": {
+        "person": "LINKEDIN_PERSON_ID",
+        "text": "={{ $('Création du contenu').item.json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -260
+      ],
+      "id": "linkedin-post-node",
+      "name": "Publication du post",
+      "notesInFlow": true,
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "LINKEDIN_CREDENTIALS_ID",
+          "name": "LinkedIn account"
+        }
+      },
+      "notes": "La publication est publiée sur LinkedIn"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "conditional-id",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1860,
+        -40
+      ],
+      "id": "condition-node",
+      "name": "Condition de publication",
+      "notes": "En fonction de votre choix, le post sera publié ou non"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Votre Serveur",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "linkedin",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "content": "La publication n'a pas été publiée",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2120,
+        200
+      ],
+      "id": "discord-cancel-notification-node",
+      "name": "Notification annulation",
+      "webhookId": "discord-cancel-webhook-id",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification que la réponse n'a pas été envoyée"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Votre Serveur",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "linkedin",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "content": "La publication a bien été postée !",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        -260
+      ],
+      "id": "discord-success-notification-node",
+      "name": "Notification publication",
+      "webhookId": "discord-success-webhook-id",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification sur Discord que la publication a bien été postée"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "AIRTABLE_BASE_ID",
+          "mode": "list",
+          "cachedResultName": "LIGNE EDITORIAL",
+          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "value": "AIRTABLE_TABLE_ID",
+          "mode": "list",
+          "cachedResultName": "Votre Table",
+          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID/AIRTABLE_TABLE_ID"
+        },
+        "filterByFormula": "{Statut} = \"GO\"",
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "STATUT"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1080,
+        160
+      ],
+      "id": "airtable-search-node",
+      "name": "Planning de publications - Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIALS_ID",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "LINKEDIN",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "STATUT",
+              "lookupValue": "GO"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1100,
+        -200
+      ],
+      "id": "google-sheets-search-node",
+      "name": "Planning de publication - Google",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_CREDENTIALS_ID",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Contient l'ensemble des sujets et thématiques qui seront utilisé comme ressources de publication."
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "LINKEDIN",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "STATUT": "DONE",
+            "SUJET": "={{ $('Planning de publication - Google').item.json.SUJET }}"
+          },
+          "matchingColumns": [
+            "SUJET"
+          ],
+          "schema": [
+            {
+              "id": "SUJET",
+              "displayName": "SUJET",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2300,
+        -440
+      ],
+      "id": "google-sheets-update-node",
+      "name": "Mise à jour du statut - Google",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_CREDENTIALS_ID",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Le statut de la publication passe de 'GO' à 'DONE'"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "AIRTABLE_BASE_ID",
+          "mode": "list",
+          "cachedResultName": "LIGNE EDITORIAL",
+          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID"
+        },
+        "table": {
+          "__rl": true,
+          "value": "AIRTABLE_TABLE_ID",
+          "mode": "list",
+          "cachedResultName": "Votre Table",
+          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID/AIRTABLE_TABLE_ID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "STATUT": "DONE",
+            "SUJET": "={{ $('Planning de publications - Airtable').item.json.SUJET }}",
+            "PUBLICATION": "={{ $('Création du contenu').item.json.message.content }}"
+          },
+          "matchingColumns": [
+            "SUJET"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "SUJET",
+              "displayName": "SUJET",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "PUBLICATION",
+              "displayName": "PUBLICATION",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2300,
+        -160
+      ],
+      "id": "airtable-update-node",
+      "name": "Mise à jour du statut - Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIALS_ID",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Déclencheur": {
+      "main": [
+        [
+          {
+            "node": "Planning de publications - Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification réponse et question": {
+      "main": [
+        [
+          {
+            "node": "Condition de publication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Création du contenu": {
+      "main": [
+        [
+          {
+            "node": "Notification réponse et question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publication du post": {
+      "main": [
+        [
+          {
+            "node": "Mise à jour du statut - Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition de publication": {
+      "main": [
+        [
+          {
+            "node": "Publication du post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notification annulation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planning de publications - Airtable": {
+      "main": [
+        [
+          {
+            "node": "Création du contenu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planning de publication - Google": {
+      "main": [
+        []
+      ]
+    },
+    "Mise à jour du statut - Google": {
+      "main": [
+        []
+      ]
+    },
+    "Mise à jour du statut - Airtable": {
+      "main": [
+        [
+          {
+            "node": "Notification publication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "anonymized-version-id",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "anonymized-instance-id"
+  },
+  "id": "anonymized-workflow-id",
+  "tags": []
+}
