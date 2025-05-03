@@ -114,8 +114,8 @@ Si ce cockpit t'inspire ou si tu souhaites mettre en place une solution similair
 
 - 💼 [LinkedIn](https://www.linkedin.com/in/liamsdd)  
 - 🐦 [Twitter / X](https://twitter.com/liam4chill)  
-- 📖 [Lire l’article complet sur mon blog](https://liam4chill.fr/n8n)
 
 ---
 
+📖 [Lire l’article complet sur mon blog](https://liam4chill.fr/n8n)
 🛠️ *Dernière mise à jour : Mai 2025*
