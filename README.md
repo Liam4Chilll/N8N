@@ -7,8 +7,8 @@ j'ajouterais des worklows au fil du temps
 # Automatisations n8n pour Discord : LinkedIn + Répondeur Email
 
 Ce projet regroupe deux workflows automatisés sous n8n, connectés à un serveur Discord. Ils visent à **optimiser la communication professionnelle** à travers deux axes complémentaires :
-- 🔹 la **publication stratégique sur LinkedIn**,
-- 🔹 la **gestion intelligente des emails**.
+   🔹 la **publication stratégique sur LinkedIn**,
+   🔹 la **gestion intelligente des emails**.
 
 D'autre fonctionnalités sont à venir : 
 • Gestion des rendez vous
@@ -16,7 +16,7 @@ D'autre fonctionnalités sont à venir :
 
 ---
 
-## 🧰 Technologies et APIs utilisées
+## Outils et APIs utilisées
 
 - **n8n** (outil no-code d'automatisation)
 - **Discord Bot API** – pour les notifications et validations
@@ -27,7 +27,7 @@ D'autre fonctionnalités sont à venir :
 
 ---
 
-# 📌 Workflow 1 — Ghostwritter (💼 Rédacteur LinkedIn - Discord ✅)
+# 📌 Workflow 1 — Ghostwritter
 
 ### 🎯 Objectif
 Automatiser la création, validation et publication de posts LinkedIn à partir d’un planning éditorial externe (Google Sheets ou Airtable), avec interaction humaine via Discord.
@@ -55,7 +55,7 @@ Automatiser la création, validation et publication de posts LinkedIn à partir 
 
 ---
 
-# 📬 Workflow 2 — Emailing (💼 Répondeur Email • Discord ✅)
+# 📬 Workflow 2 — Emailing
 
 ### 🎯 Objectif
 Notifier des nouveaux mails et générer automatiquement des réponses professionnelles aux emails reçus, avec contrôle humain via Discord avant envoi.
