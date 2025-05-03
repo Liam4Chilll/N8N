@@ -1,5 +1,5 @@
 {
-  "name": "💼 Rédacteur LinkedIn - Discord ✅",
+  "name": "💼 Rédacteur Linkedin - Discord ✅",
   "nodes": [
     {
       "parameters": {
@@ -18,7 +18,7 @@
         860,
         -40
       ],
-      "id": "schedule-trigger-node",
+      "id": "trigger-node-id",
       "name": "Déclencheur",
       "notesInFlow": true,
       "notes": "Permet de régler la fréquence de l'exécution du workflow."
@@ -29,17 +29,17 @@
         "operation": "sendAndWait",
         "guildId": {
           "__rl": true,
-          "value": "DISCORD_GUILD_ID",
+          "value": "VOTRE_ID_SERVEUR_DISCORD",
           "mode": "list",
           "cachedResultName": "Votre Serveur",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD"
         },
         "channelId": {
           "__rl": true,
-          "value": "DISCORD_CHANNEL_ID",
+          "value": "VOTRE_ID_CHANNEL_DISCORD",
           "mode": "list",
           "cachedResultName": "linkedin",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD/VOTRE_ID_CHANNEL_DISCORD"
         },
         "message": "=Votre publication du jour est prête !\n\nLa voici : \n\n{{ $json.choices[0].message.content }}\n\n\nVoulez vous la publier ? ",
         "approvalOptions": {
@@ -57,13 +57,13 @@
         1640,
         -40
       ],
-      "id": "discord-notification-node",
+      "id": "discord-notification-node-id",
       "name": "Notification réponse et question",
-      "webhookId": "discord-webhook-id",
+      "webhookId": "webhook-id-1",
       "notesInFlow": true,
       "credentials": {
         "discordBotApi": {
-          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "id": "discord-credentials-id",
           "name": "Discord Bot account"
         }
       },
@@ -80,7 +80,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Tu es rédacteur Stratégique Spécialisé en marketing d'integration IA pour les entreprises. Tu interviens comme architecte de contenus à haute valeur ajoutée pour les professionnels souhaitant intégrer l'IA dans leur routine professionnelle.\n\nTu es titulaire d'un Master en Communication Digitale Stratégique, renforcé par une certification en Neuromarketing et Influence Comportementale. Formé aux fondamentaux de la pédagogie cognitive et à la vulgarisation technique, tu es spécialisé en IA générative et automatisation grâce à un parcours mixte en journalisme spécialisé et copywriting émotionnel.\n\nTu es spécialisé en création de contenus LinkedIn pour les professionels. ta force est de proposer un outils gamechanger pour les entreprises, à faible coût et dont tu maîtrises le sujet tout en ayant une approche pédagogique et accessible. Tu conçois des publications centrées sur l'intégration de l'IA en entreprise et les avantages qu'offre des workflows bien réalisés au quotidien, jouant sur les leviers émotionnels (peur de rater, frustration, curiosité, sentiment de maîtrise), tout en établissant une relation de confiance.\n\nTu proposes des publications prêtes à l'emploi, construites selon les meilleures structures de copywriting (hook, tension, résolution, moralité, appel à l'interaction). Chaque post est une intention stratégique (éduquer, engager, rassurer, inspirer, convertir).\n\n\nTu emprunte un ton professionnel mais accessible, avec une touche de complicité et d'humanité. Tu alterne entre le ton inspirant, le ton pédagogique et l'approche "coup de poing bienveillante" pour provoquer des déclics.\n\nMaintenant, propose moi une publication sur le sujet suivant : \"{{ $json.SUJET }}\"\n\nLa publication ne doit pas contenir de hashtag ni d'émojis.\n\nElle doit être aérée avec un hook, des sauts de lignes et des courts paragraphes placés stratégiquement pour un maximum d'impact auprès des lecteurs et offrir un rythme aux publications.\n\nNe te répete pas inutilement dans la publication et chaque terme doit justement être séléctionné et jamais de trop dans une phrase dans le but d'être très clair, concis à la lecture sans dénaturer le style.\n\nTon résultat doit impérativement contenir uniquement la publication, sans commentaire et sans remarque associés.\n\n\n"
+              "content": "<votre prompt>"
             }
           ]
         },
@@ -93,11 +93,11 @@
         1280,
         -40
       ],
-      "id": "openai-content-creation-node",
+      "id": "openai-node-id",
       "name": "Création du contenu",
       "credentials": {
         "openAiApi": {
-          "id": "OPENAI_CREDENTIALS_ID",
+          "id": "openai-credentials-id",
           "name": "OpenAi account"
         }
       },
@@ -105,7 +105,7 @@
     },
     {
       "parameters": {
-        "person": "LINKEDIN_PERSON_ID",
+        "person": "linkedin-person-id",
         "text": "={{ $('Création du contenu').item.json.message.content }}",
         "additionalFields": {}
       },
@@ -115,12 +115,12 @@
         2080,
         -260
       ],
-      "id": "linkedin-post-node",
+      "id": "linkedin-publish-node-id",
       "name": "Publication du post",
       "notesInFlow": true,
       "credentials": {
         "linkedInOAuth2Api": {
-          "id": "LINKEDIN_CREDENTIALS_ID",
+          "id": "linkedin-credentials-id",
           "name": "LinkedIn account"
         }
       },
@@ -137,7 +137,7 @@
           },
           "conditions": [
             {
-              "id": "conditional-id",
+              "id": "condition-id-1",
               "leftValue": "={{ $json.data.approved }}",
               "rightValue": true,
               "operator": {
@@ -156,7 +156,7 @@
         1860,
         -40
       ],
-      "id": "condition-node",
+      "id": "condition-node-id",
       "name": "Condition de publication",
       "notes": "En fonction de votre choix, le post sera publié ou non"
     },
@@ -165,17 +165,17 @@
         "resource": "message",
         "guildId": {
           "__rl": true,
-          "value": "DISCORD_GUILD_ID",
+          "value": "VOTRE_ID_SERVEUR_DISCORD",
           "mode": "list",
           "cachedResultName": "Votre Serveur",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD"
         },
         "channelId": {
           "__rl": true,
-          "value": "DISCORD_CHANNEL_ID",
+          "value": "VOTRE_ID_CHANNEL_DISCORD",
           "mode": "list",
           "cachedResultName": "linkedin",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD/VOTRE_ID_CHANNEL_DISCORD"
         },
         "content": "La publication n'a pas été publiée",
         "options": {}
@@ -186,13 +186,13 @@
         2120,
         200
       ],
-      "id": "discord-cancel-notification-node",
+      "id": "discord-cancel-node-id",
       "name": "Notification annulation",
-      "webhookId": "discord-cancel-webhook-id",
+      "webhookId": "webhook-id-2",
       "notesInFlow": true,
       "credentials": {
         "discordBotApi": {
-          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "id": "discord-credentials-id",
           "name": "Discord Bot account"
         }
       },
@@ -203,17 +203,17 @@
         "resource": "message",
         "guildId": {
           "__rl": true,
-          "value": "DISCORD_GUILD_ID",
+          "value": "VOTRE_ID_SERVEUR_DISCORD",
           "mode": "list",
           "cachedResultName": "Votre Serveur",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD"
         },
         "channelId": {
           "__rl": true,
-          "value": "DISCORD_CHANNEL_ID",
+          "value": "VOTRE_ID_CHANNEL_DISCORD",
           "mode": "list",
           "cachedResultName": "linkedin",
-          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+          "cachedResultUrl": "https://discord.com/channels/VOTRE_ID_SERVEUR_DISCORD/VOTRE_ID_CHANNEL_DISCORD"
         },
         "content": "La publication a bien été postée !",
         "options": {}
@@ -224,13 +224,13 @@
         2560,
         -260
       ],
-      "id": "discord-success-notification-node",
+      "id": "discord-success-node-id",
       "name": "Notification publication",
-      "webhookId": "discord-success-webhook-id",
+      "webhookId": "webhook-id-3",
       "notesInFlow": true,
       "credentials": {
         "discordBotApi": {
-          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "id": "discord-credentials-id",
           "name": "Discord Bot account"
         }
       },
@@ -241,17 +241,17 @@
         "operation": "search",
         "base": {
           "__rl": true,
-          "value": "AIRTABLE_BASE_ID",
+          "value": "VOTRE_BASE_AIRTABLE_ID",
           "mode": "list",
           "cachedResultName": "LIGNE EDITORIAL",
-          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID"
+          "cachedResultUrl": "https://airtable.com/VOTRE_BASE_AIRTABLE_ID"
         },
         "table": {
           "__rl": true,
-          "value": "AIRTABLE_TABLE_ID",
+          "value": "VOTRE_TABLE_AIRTABLE_ID",
           "mode": "list",
-          "cachedResultName": "Votre Table",
-          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID/AIRTABLE_TABLE_ID"
+          "cachedResultName": "VOTRE_TABLE",
+          "cachedResultUrl": "https://airtable.com/VOTRE_BASE_AIRTABLE_ID/VOTRE_TABLE_AIRTABLE_ID"
         },
         "filterByFormula": "{Statut} = \"GO\"",
         "options": {},
@@ -269,11 +269,11 @@
         1080,
         160
       ],
-      "id": "airtable-search-node",
+      "id": "airtable-search-node-id",
       "name": "Planning de publications - Airtable",
       "credentials": {
         "airtableTokenApi": {
-          "id": "AIRTABLE_CREDENTIALS_ID",
+          "id": "airtable-credentials-id",
           "name": "Airtable Personal Access Token account"
         }
       }
@@ -282,17 +282,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "GOOGLE_SHEET_ID",
+          "value": "VOTRE_ID_DOCUMENT_GOOGLE_SHEET",
           "mode": "list",
           "cachedResultName": "LINKEDIN",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/VOTRE_ID_DOCUMENT_GOOGLE_SHEET/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Feuille 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/VOTRE_ID_DOCUMENT_GOOGLE_SHEET/edit#gid=0"
         },
         "filtersUI": {
           "values": [
@@ -312,12 +312,12 @@
         1100,
         -200
       ],
-      "id": "google-sheets-search-node",
+      "id": "google-sheets-search-node-id",
       "name": "Planning de publication - Google",
       "notesInFlow": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "GOOGLE_SHEETS_CREDENTIALS_ID",
+          "id": "google-sheets-credentials-id",
           "name": "Google Sheets account"
         }
       },
@@ -328,17 +328,17 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "GOOGLE_SHEET_ID",
+          "value": "VOTRE_ID_DOCUMENT_GOOGLE_SHEET",
           "mode": "list",
           "cachedResultName": "LINKEDIN",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/VOTRE_ID_DOCUMENT_GOOGLE_SHEET/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Feuille 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/VOTRE_ID_DOCUMENT_GOOGLE_SHEET/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -392,12 +392,12 @@
         2300,
         -440
       ],
-      "id": "google-sheets-update-node",
+      "id": "google-sheets-update-node-id",
       "name": "Mise à jour du statut - Google",
       "notesInFlow": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "GOOGLE_SHEETS_CREDENTIALS_ID",
+          "id": "google-sheets-credentials-id",
           "name": "Google Sheets account"
         }
       },
@@ -408,17 +408,17 @@
         "operation": "upsert",
         "base": {
           "__rl": true,
-          "value": "AIRTABLE_BASE_ID",
+          "value": "VOTRE_BASE_AIRTABLE_ID",
           "mode": "list",
           "cachedResultName": "LIGNE EDITORIAL",
-          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID"
+          "cachedResultUrl": "https://airtable.com/VOTRE_BASE_AIRTABLE_ID"
         },
         "table": {
           "__rl": true,
-          "value": "AIRTABLE_TABLE_ID",
+          "value": "VOTRE_TABLE_AIRTABLE_ID",
           "mode": "list",
-          "cachedResultName": "Votre Table",
-          "cachedResultUrl": "https://airtable.com/AIRTABLE_BASE_ID/AIRTABLE_TABLE_ID"
+          "cachedResultName": "VOTRE_TABLE",
+          "cachedResultUrl": "https://airtable.com/VOTRE_BASE_AIRTABLE_ID/VOTRE_TABLE_AIRTABLE_ID"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -486,11 +486,11 @@
         2300,
         -160
       ],
-      "id": "airtable-update-node",
+      "id": "airtable-update-node-id",
       "name": "Mise à jour du statut - Airtable",
       "credentials": {
         "airtableTokenApi": {
-          "id": "AIRTABLE_CREDENTIALS_ID",
+          "id": "airtable-credentials-id",
           "name": "Airtable Personal Access Token account"
         }
       }
@@ -597,11 +597,9 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "anonymized-version-id",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "anonymized-instance-id"
+    "instanceId": "instance-id-anonymized"
   },
-  "id": "anonymized-workflow-id",
   "tags": []
 }
