@@ -1,0 +1,445 @@
+{
+  "name": "📧 Répondeur Email • Discord",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7446c71a-c10f-42ef-91ac-929413f18731",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        0
+      ],
+      "id": "ba82aa3a-0479-41af-9a70-48ec9d43c506",
+      "name": "If",
+      "notesInFlow": true,
+      "notes": "Condition d'envoi"
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4ee1779d-f5b1-49f4-a22b-e71342aa825e",
+      "name": "Attente email",
+      "notesInFlow": true,
+      "credentials": {
+        "imap": {
+          "id": "EMAIL_IMAP_CREDENTIALS_ID",
+          "name": "IMAP account"
+        }
+      },
+      "notes": "À l'écoute de la réception d'un nouvel email"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Your Discord Server",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "emails",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "content": "=Bonjour,\n\nVous avez reçu un mail de {{ $json.from.value[0].name }} le {{ $json.date }}\n\nÀ propos de : {{ $json.subject }}\n\nVoici son message :\n{{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "0bec2bd6-36fe-455c-a54c-abe3f5808dcb",
+      "name": "Notification email",
+      "webhookId": "WEBHOOK_ID_1",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification d'un email reçu via Discord"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca5452d6-75fc-42b9-95a8-a3d4256a9e5b",
+              "name": "ENTREPRISE",
+              "value": "VotreEntreprise",
+              "type": "string"
+            },
+            {
+              "id": "ecbfa426-ec0e-42ce-8bac-064f93e5801d",
+              "name": "PRIX",
+              "value": "Price info",
+              "type": "string"
+            },
+            {
+              "id": "01886224-ca29-4449-8446-a8b5d3828e15",
+              "name": "HORAIRES",
+              "value": "9h-17h",
+              "type": "string"
+            },
+            {
+              "id": "b55d2697-5e46-412b-8fae-cdedc65bec3c",
+              "name": "OUVERTURE",
+              "value": "Lundi au Vendredi",
+              "type": "string"
+            },
+            {
+              "id": "ad6f744f-8d63-4207-bfbc-c7048a213846",
+              "name": "RESERVATION",
+              "value": "=https://calendly.com/your-booking-link/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        0
+      ],
+      "id": "ee70a68f-fc3c-4cb5-b3d7-d359e384868b",
+      "name": "Informations entreprise",
+      "notesInFlow": true,
+      "notes": "Formulaire contenant les informations régulièrement demandées par les clients par emails."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Your Discord Server",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "emails",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "message": "=Souhaitez-vous envoyer cette réponse ? \n\n{{ $json.output }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        0
+      ],
+      "id": "ad84eaea-92e6-48f4-bc91-a140656c25d7",
+      "name": "Approbation réponse",
+      "webhookId": "WEBHOOK_ID_2",
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification de la réponse générée via Discord et proposition d'envoi"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('Attente email').item.json.to.value[0].address }}",
+        "toEmail": "={{ $('Attente email').item.json.from.value[0].address }}",
+        "subject": "=RE:  {{ $('Email Listener').item.json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1580,
+        -160
+      ],
+      "id": "1016ba37-9ca3-4a42-a365-c7471fe77cf1",
+      "name": "Envoi réponse",
+      "webhookId": "WEBHOOK_ID_3",
+      "credentials": {
+        "smtp": {
+          "id": "SMTP_CREDENTIALS_ID",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Envoi de la réponse par email"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Your Discord Server",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "emails",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "content": "Réponse envoyée 🚀",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        -180
+      ],
+      "id": "9e0ddd28-8966-4b38-a05c-c3083e8af6a5",
+      "name": "Notification envoi",
+      "webhookId": "WEBHOOK_ID_4",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification de l'envoi de la réponse"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "DISCORD_GUILD_ID",
+          "mode": "list",
+          "cachedResultName": "Your Discord Server",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "DISCORD_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "emails",
+          "cachedResultUrl": "https://discord.com/channels/DISCORD_GUILD_ID/DISCORD_CHANNEL_ID"
+        },
+        "content": "La réponse n'a pas été envoyée ❌",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        140
+      ],
+      "id": "7132aeda-69b1-4332-b493-d6e76153b0da",
+      "name": "Notification annulation",
+      "webhookId": "WEBHOOK_ID_5",
+      "notesInFlow": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "DISCORD_BOT_CREDENTIALS_ID",
+          "name": "Discord Bot account"
+        }
+      },
+      "notes": "Notification que la réponse n'a pas été envoyée"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=En tant que secrétaire assistant personnel de haut niveau, tu es spécialisé dans la gestion des communications pour des entreprises.\n\nTu es l'assistant IA de l'entreprise VotreEntreprise. Ta mission est de rédiger une réponse professionnelle et empathique à nos clients et prospects en répondant spécifiquement à leurs questions.\n\nINSTRUCTIONS :\n- Tu intègres UNIQUEMENT les données nécessaires à la réponse qui concerne le mail parmi celles-ci :\n  • Prix : {{ $json.PRIX }}\n  • Jours d'ouverture : {{ $json.OUVERTURE }}\n  • Horaires d'ouverture : {{ $json.HORAIRES }}\n  • Prise de rendez-vous : {{ $json.RESERVATION }}\n  • Site web : https://votreentreprise.fr \n\nTu adoptes un ton professionnel, chaleureux et empathique.  \nTu ne formates pas en JSON ou Markdown : juste le texte du mail.\nTu ne mentionnes pas systématiquement chaque information.\nTu signes systématiquement chaque réponse par \"VotreEntreprise - contact@votreentreprise.fr\"\n\n\nCrée maintenant une réponse pour cet email reçu :{{ $('Attente email').item.json.text }}\n\n\nTa réponse ne doit contenir aucun commentaire de ta part, juste le résultat.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        700,
+        0
+      ],
+      "id": "ed5282c7-90bb-4e03-a102-3fcfab08ec1d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        620,
+        240
+      ],
+      "id": "95bacf79-3ede-46fb-979b-fe3537f5eea3",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_CREDENTIALS_ID",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Envoi réponse",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notification annulation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attente email": {
+      "main": [
+        [
+          {
+            "node": "Notification email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification email": {
+      "main": [
+        [
+          {
+            "node": "Informations entreprise",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Informations entreprise": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approbation réponse": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoi réponse": {
+      "main": [
+        [
+          {
+            "node": "Notification envoi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Approbation réponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "WORKFLOW_VERSION_ID",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "INSTANCE_ID"
+  },
+  "id": "WORKFLOW_ID",
+  "tags": []
+}
