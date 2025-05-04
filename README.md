@@ -27,7 +27,7 @@ D'autre fonctionnalités sont à venir :
 
 ---
 
-# 📌 Workflow 1 — Ghostwritter
+# 📌 Workflow 1 — LinkedIn
 
 ### 🎯 Objectif
 Automatiser la création, validation et publication de posts LinkedIn à partir d’un planning éditorial externe (Google Sheets ou Airtable), avec interaction humaine via Discord.
