@@ -1,0 +1,407 @@
+{
+  "name": "Ghostwriter X",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        160
+      ],
+      "id": "e8dfbecf-7980-4cae-812b-d7aaa3b94ec4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        160
+      ],
+      "id": "c5a94e98-db1f-4159-a40e-a675d905bb09",
+      "name": "X",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "X account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Créer une publication twitter pour : {{ $('Airtable').item.json.SUJET }}\n\nLe post doit être composé de phrases courtes, des sauts de ligne réguliers et doit absolument apporter de la valeur à mon audience.\n\nLa publication doit être sans hashtag ni émojis.\n\nFourni un résultat brut sans commentaire ni indication."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        680,
+        160
+      ],
+      "id": "e77b5c06-4b73-4f4f-bf36-96174d527fb2",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "[AIRTABLE_BASE_ID]",
+          "mode": "list",
+          "cachedResultName": "LIGNE EDITORIAL",
+          "cachedResultUrl": "https://airtable.com/[AIRTABLE_BASE_ID]"
+        },
+        "table": {
+          "__rl": true,
+          "value": "[AIRTABLE_TABLE_ID]",
+          "mode": "list",
+          "cachedResultName": "CONTENUS",
+          "cachedResultUrl": "https://airtable.com/[AIRTABLE_BASE_ID]/[AIRTABLE_TABLE_ID]"
+        },
+        "filterByFormula": "{Statut} = \"PRET\"",
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "STATUT"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        160
+      ],
+      "id": "934b662c-0f79-4321-b769-632a4f019855",
+      "name": "Airtable",
+      "executeOnce": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "[AIRTABLE_BASE_ID]",
+          "mode": "list",
+          "cachedResultName": "LIGNE EDITORIAL",
+          "cachedResultUrl": "https://airtable.com/[AIRTABLE_BASE_ID]"
+        },
+        "table": {
+          "__rl": true,
+          "value": "[AIRTABLE_TABLE_ID]",
+          "mode": "list",
+          "cachedResultName": "CONTENUS",
+          "cachedResultUrl": "https://airtable.com/[AIRTABLE_BASE_ID]/[AIRTABLE_TABLE_ID]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "SUJET": "={{ $('Airtable').item.json.SUJET }}",
+            "STATUT": "POSTÉE"
+          },
+          "matchingColumns": [
+            "SUJET"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "SUJET",
+              "displayName": "SUJET",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "STATUT",
+              "displayName": "STATUT",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "PUBLICATION",
+              "displayName": "PUBLICATION",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1380,
+        -80
+      ],
+      "id": "7f183d9c-6bef-4589-90cc-f79a9284fe6c",
+      "name": "Airtable1",
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "[GOOGLE_SHEETS_DOC_ID]",
+          "mode": "list",
+          "cachedResultName": "PUBLICATIONS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/[GOOGLE_SHEETS_DOC_ID]/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/[GOOGLE_SHEETS_DOC_ID]/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "STATUS",
+              "lookupValue": "{Statut} = \"GO\""
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        160,
+        420
+      ],
+      "id": "78288dba-5188-4bbb-a483-29e39f8e74cf",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "[GOOGLE_SHEETS_DOC_ID]",
+          "mode": "list",
+          "cachedResultName": "PUBLICATIONS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/[GOOGLE_SHEETS_DOC_ID]/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/[GOOGLE_SHEETS_DOC_ID]/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "STATUS": "DONE"
+          },
+          "matchingColumns": [
+            "SUJET"
+          ],
+          "schema": [
+            {
+              "id": "SUJET",
+              "displayName": "SUJET",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "STATUS",
+              "displayName": "STATUS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1380,
+        420
+      ],
+      "id": "e144ff90-a3f2-4879-a949-36fa60a22c8c",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "[CREDENTIALS_ID]",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "[VERSION_ID]",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "[INSTANCE_ID]"
+  },
+  "id": "[WORKFLOW_ID]",
+  "tags": []
+}
