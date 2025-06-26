@@ -7,7 +7,10 @@ j'ajouterais des worklows au fil du temps
 # Automatisations n8n pour Discord : LinkedIn + Répondeur Email
 
 Ce projet regroupe deux workflows automatisés sous n8n, connectés à un serveur Discord. Ils visent à **optimiser la communication professionnelle** à travers deux axes complémentaires :
+
+
    🔹 la **publication stratégique sur LinkedIn**,
+
    🔹 la **gestion intelligente des emails**.
 
 D'autre fonctionnalités sont à venir : 
@@ -27,22 +30,22 @@ D'autre fonctionnalités sont à venir :
 
 ---
 
-# 📌 Workflow 1 — LinkedIn
+# Workflow 1 — LinkedIn
 
-### 🎯 Objectif
+### Objectif
 Automatiser la création, validation et publication de posts LinkedIn à partir d’un planning éditorial externe (Google Sheets ou Airtable), avec interaction humaine via Discord.
 
-### 🔁 Fonctionnement
+### Fonctionnement
 
 1. ⏱ Déclencheur toutes les 12h
-2. 📚 Lecture du sujet dans Airtable / Google Sheets (statut = "GO")
-3. ✍️ Génération du post via GPT-3.5-Turbo avec un prompt copywriting
-4. 📩 Notification sur Discord avec bouton de validation
-5. 🧠 Décision :
+2. Lecture du sujet dans Airtable / Google Sheets (statut = "GO")
+3. Génération du post via GPT-3.5-Turbo avec un prompt copywriting
+4. Notification sur Discord avec bouton de validation
+5. Décision :
    - ✅ Si **validé** → Publication LinkedIn + MAJ du statut (`GO` → `DONE`)
    - ❌ Si **refusé** → Notification de non-publication
 
-### 🧩 Modules clés
+### Modules clés
 
 | Étape                        | Description                                                |
 |-----------------------------|------------------------------------------------------------|
@@ -55,22 +58,22 @@ Automatiser la création, validation et publication de posts LinkedIn à partir 
 
 ---
 
-# 📬 Workflow 2 — Emailing
+# Workflow 2 — Emailing
 
-### 🎯 Objectif
+### Objectif
 Notifier des nouveaux mails et générer automatiquement des réponses professionnelles aux emails reçus, avec contrôle humain via Discord avant envoi.
 
-### 🔁 Fonctionnement
+### Fonctionnement
 
-1. 📥 Réception d’un nouvel email (via IMAP)
-2. 📩 Notification sur Discord du contenu du message
-3. 🗂 Insertion automatique des infos (prix, horaires, lien Calendly…)
-4. 🧠 Génération de réponse avec un **agent IA spécialisé OccitAI**
-5. 📤 Proposition de réponse sur Discord :
+1. Réception d’un nouvel email (via IMAP)
+2. Notification sur Discord du contenu du message
+3. Insertion automatique des infos (prix, horaires, lien Calendly…)
+4. Génération de réponse avec un **agent IA spécialisé OccitAI**
+5. Proposition de réponse sur Discord :
    - ✅ Si **validé** → Envoi de l’email via SMTP
    - ❌ Si **refusé** → Notification d’annulation
 
-### 🧩 Modules clés
+### Modules clés
 
 | Étape                      | Description                                               |
 |---------------------------|-----------------------------------------------------------|
@@ -83,7 +86,7 @@ Notifier des nouveaux mails et générer automatiquement des réponses professio
 
 ---
 
-## 🔐 Accès API requis
+## Accès API requis
 
 - `OpenAI API Key`
 - `Discord Bot Token` 
@@ -93,7 +96,7 @@ Notifier des nouveaux mails et générer automatiquement des réponses professio
 
 ---
 
-## ✅ Bénéfices
+## Bénéfices
 
 - **Gain de temps** considérable dans la gestion de contenu et d’emails
 - **Contrôle humain intégré**, garantissant la qualité des réponses
@@ -102,13 +105,13 @@ Notifier des nouveaux mails et générer automatiquement des réponses professio
 
 ---
 
-## 📎 À propos
+## À propos
 
 Ces workflows sont développés pour une utilisation interne, mais peuvent être adaptés à d'autres structures souhaitant allier **automatisation intelligente** et **contrôle éditorial humain**.
 
 ---
 
-## 📬 Me contacter / En savoir plus
+## Me contacter / En savoir plus
 
 Si ce cockpit t'inspire ou si tu souhaites mettre en place une solution similaire pour ton entreprise, je suis joignable ici :
 
@@ -117,5 +120,5 @@ Si ce cockpit t'inspire ou si tu souhaites mettre en place une solution similair
 
 ---
 
-📖 [Lire l’article complet sur mon blog](https://liam4chill.fr/n8n)
+Lire l’article complet sur mon blog](https://liam4chill.fr/n8n)
 🛠️ *Dernière mise à jour : Mai 2025*
