@@ -1,4 +1,4 @@
-Je développe actuellement ce projet dans le but de créer un espace automatisé et boosté à l'IA pour les entrepreneurs, TPE et PME.
+J'ai travaillé quelques jours sur ce projet dans le but de créer un espace automatisé et boosté à l'IA pour les entrepreneurs, TPE et PME.
 j'ajouterais des worklows au fil du temps
 
 
